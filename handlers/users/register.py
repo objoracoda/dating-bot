@@ -7,7 +7,7 @@ from loader import dp
 from loader import db
 
 from states import states_reg
-from keyboards.default import kb_menu, kb_reg
+from keyboards.default import kb_menu, kb_reg, kb_city
 
 
 @dp.message_handler(text='👤 Новая Анкета')
@@ -60,7 +60,15 @@ async def register_state2(message: types.Message, state: FSMContext):
 async def register_state3(message: types.Message, state: FSMContext):
     answer = message.text
 
-    await state.update_data(state_gender=answer)
+    match answer:
+        case 'Я парень':
+            await state.update_data(state_gender='male')
+        case 'Я девушка':
+            await state.update_data(state_gender='female')
+        case default:
+            await message.answer('Я тебя не понял, используй кнопки ниже!')
+            return 1
+    
     data = await state.get_data()
     name = data.get('state_name')
     await message.answer(f'{name}, пришли cвою самую классную фоточку 😍')
@@ -104,8 +112,16 @@ async def register_state5(message: types.Message, state: FSMContext):
 async def register_state6(message: types.Message, state: FSMContext):
     answer = message.text
 
-    await state.update_data(state_find_gender=answer)
-    await message.answer('Из какого ты города?')
+    match answer:
+        case 'Девушки':
+            await state.update_data(state_find_gender='female')
+        case 'Парни':
+            await state.update_data(state_find_gender='male')
+        case default:
+            await message.answer('Я тебя не понял, используй кнопки ниже!')
+            return 1
+
+    await message.answer('Из какого ты города?',reply_markup=kb_city)
     await states_reg.state_city.set()
 
 
@@ -113,7 +129,7 @@ async def register_state6(message: types.Message, state: FSMContext):
 async def register_state7(message: types.Message, state: FSMContext):
     answer = message.text
 
-    await state.update_data(state_city=answer)
+    await state.update_data(state_city=answer.lower())
     data = await state.get_data()
 
     await message.answer(f'Анкета создана! Давай посмотрим на твой профиль 👀',reply_markup=kb_reg)

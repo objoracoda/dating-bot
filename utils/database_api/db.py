@@ -17,9 +17,9 @@ class Database:
     def add_user(self,user_id,user_name,user_age,user_gender,user_photo,user_content,user_find_gender,user_city,signup):
         with self.connection:
             if self.user_exists(user_id):
-                return self.cursor.execute("UPDATE `users` SET `name`=?, `age`=?,`content`=?,`photo`=?,`city`=? WHERE `user_id` = ?", (user_name,user_age,user_content, user_photo, user_city,user_id,))
+                return self.cursor.execute("UPDATE `users` SET `name`=?, `age`=?,`content`=?,`photo`=?,`city`=?, `self_gender`=?,`find_gender`=? WHERE `user_id` = ?", (user_name,user_age,user_content, user_photo, user_city,user_gender,user_find_gender,user_id,))
             else:
-                return self.cursor.execute("INSERT INTO `users` (`user_id`,`name`,`age`,`content`,`photo`,`city`,`signup`) VALUES (?,?,?,?,?,?,?)", (user_id,user_name,user_age,user_content, user_photo, user_city,signup,))
+                return self.cursor.execute("INSERT INTO `users` (`user_id`,`name`,`age`,`content`,`photo`,`city`,`self_gender`,`find_gender`,`signup`) VALUES (?,?,?,?,?,?,?,?,?)", (user_id,user_name,user_age,user_content, user_photo, user_city,user_gender,user_find_gender,signup,))
 
     
     def get_user_data(self,user_id):
@@ -28,8 +28,8 @@ class Database:
             return result[0]
 
     
-    def get_users_recommend(self,user_age):
+    def get_users_recommend(self,user_id,user_city,user_age,user_find_gender):
         with self.connection:
-            result = self.cursor.execute("SELECT * FROM `users` WHERE `age` < ?",(user_age,)).fetchall()
-            print(result)
+            #result = self.cursor.execute("SELECT * FROM `users` WHERE `user_id`!=? AND `gender`=? AND `city`=? AND `age` BETWEEN ? AND ?",(user_id,user_gender,user_city,int(user_age)-2,int(user_age)+2)).fetchall()
+            result = self.cursor.execute("SELECT * FROM `users` WHERE `user_id`!=? AND `city`=? AND `self_gender`=? AND `age` BETWEEN ? AND ?",(user_id,user_city,user_find_gender,int(user_age)-2,int(user_age)+5)).fetchall()
             return result
