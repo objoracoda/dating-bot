@@ -5,6 +5,7 @@ from loader import db
 from utils.misc import rate_limit
 
 from keyboards.default import kb_menu
+from keyboards.inline import ikb_likes
 
 @rate_limit(limit=5)
 @dp.message_handler(text='👤 Профиль')

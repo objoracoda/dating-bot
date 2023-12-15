@@ -33,3 +33,19 @@ class Database:
             #result = self.cursor.execute("SELECT * FROM `users` WHERE `user_id`!=? AND `gender`=? AND `city`=? AND `age` BETWEEN ? AND ?",(user_id,user_gender,user_city,int(user_age)-2,int(user_age)+2)).fetchall()
             result = self.cursor.execute("SELECT * FROM `users` WHERE `user_id`!=? AND `city`=? AND `self_gender`=? AND `age` BETWEEN ? AND ?",(user_id,user_city,user_find_gender,int(user_age)-2,int(user_age)+5)).fetchall()
             return result
+
+
+    def update_likes(self,user_id,user_id_like):
+        with self.connection:
+            return self.cursor.execute("UPDATE `users` SET `likes`=? WHERE `user_id` = ?", (user_id_like,user_id,))
+
+
+    def get_likes_data(self,user_id):
+        with self.connection:
+            result = self.cursor.execute("SELECT `likes` FROM `users` WHERE `user_id`=?",(user_id,)).fetchall()
+            return result[0][0]
+
+
+    def clear_likes(self,user_id):
+        with self.connection:
+            return self.cursor.execute("UPDATE `users` SET `likes`='' WHERE `user_id` = ?", (user_id,))

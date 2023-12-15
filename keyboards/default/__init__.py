@@ -3,3 +3,4 @@ from .keyboard_reg import kb_reg
 from .keyboard_start_reg import kb_start_reg
 from .keyboard_search import kb_search_react
 from .keyboard_city import kb_city
+from .keyboard_match import kb_match_react
